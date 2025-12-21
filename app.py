@@ -32,8 +32,21 @@ def main_loop():
             print(f"Error: {e}")
             time.sleep(1)
 
+import sys
+import os
+
+def resource_path(relative_path):
+    try:
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+    return os.path.join(base_path, relative_path)
+
 if __name__ == "__main__":
     root = tk.Tk()
-    root.iconbitmap('app_icon.ico')
+    try:
+        root.iconbitmap(resource_path('app_icon.ico'))
+    except:
+        pass
     ui = AppUI(root, start_loop, stop_loop)
     root.mainloop()
