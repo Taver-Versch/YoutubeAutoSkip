@@ -9,6 +9,7 @@ Run this command to get required dependencies.
 "pip install -r requirements.txt"
 
 
+also need to download this: 
 https://github.com/UB-Mannheim/tesseract/wiki
 
 What each library is used for

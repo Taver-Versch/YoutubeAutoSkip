@@ -25,13 +25,14 @@ def main_loop():
             button = logic.find_skip_button(img)
             if button:
                 logic.click_button(region, button)
-                time.sleep(2)
-            time.sleep(1)
+                time.sleep(3)
+            time.sleep(2)
         except Exception as e:
             print(f"Error: {e}")
             time.sleep(1)
 
 if __name__ == "__main__":
     root = tk.Tk()
+    root.iconbitmap('app_icon.ico')
     ui = AppUI(root, start_loop, stop_loop)
     root.mainloop()
