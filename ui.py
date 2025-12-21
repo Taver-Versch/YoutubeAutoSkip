@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import ttk, font
+from tkinter import ttk
 import pyautogui
 
 try:
@@ -31,7 +31,7 @@ class AppUI:
         self.monitors = self.get_monitors()
         self.current_monitor = 0
 
-        monitor_frame = ttk.LabelFrame(root, text="Monitor Selection", padding=10)
+        monitor_frame = ttk.LabelFrame(root, text="WHICH MONITOR", padding=10)
         monitor_frame.pack(padx=10, pady=10, fill="x")
 
         self.monitor_var = tk.StringVar()
@@ -39,9 +39,7 @@ class AppUI:
         for i, m in enumerate(self.monitors):
             primary_tag = " [PRIMARY]" if m.get('is_primary', False) else ""
             name = m.get('name', f'Monitor {i + 1}')
-            monitor_options.append(
-                f"{name}{primary_tag}: {m['width']}x{m['height']}"
-            )
+            monitor_options.append(f"{name}{primary_tag}: {m['width']}x{m['height']}")
 
         self.monitor_combo = ttk.Combobox(monitor_frame, textvariable=self.monitor_var,
                                           values=monitor_options, state="readonly", width=60)
@@ -49,12 +47,11 @@ class AppUI:
         self.monitor_combo.pack(fill="x")
         self.monitor_combo.bind("<<ComboboxSelected>>", self.on_monitor_change)
 
-        region_frame = ttk.LabelFrame(root, text="Screen Region Coordinates", padding=10)
+        region_frame = ttk.LabelFrame(root, text="SCREEN COORDS", padding=10)
         region_frame.pack(padx=10, pady=10, fill="x")
 
         coords_grid = ttk.Frame(region_frame)
         coords_grid.pack(fill="x", expand=True)
-
         coords_grid.columnconfigure(0, weight=1)
         coords_grid.columnconfigure(1, weight=1)
         coords_grid.columnconfigure(2, weight=1)
@@ -85,19 +82,23 @@ class AppUI:
         preview_btn = ttk.Button(region_frame, text="Preview Region", command=self.preview_region)
         preview_btn.pack(pady=5)
 
-        self.status_label = ttk.Label(region_frame, text="Region: (0, 0, 800, 600)",
-                                      foreground="red", anchor="center")
-        self.status_label.pack(pady=5, fill="x")
+        search_frame = ttk.LabelFrame(root, text="WHAT TO PRESS", padding=10)
+        search_frame.pack(padx=10, pady=10, fill="x")
+
+        ttk.Label(search_frame, text="Search for:").pack(side="left", padx=5)
+        self.search_entry = ttk.Entry(search_frame, width=20, justify="center")
+        self.search_entry.insert(0, "skip")
+        self.search_entry.pack(side="left", padx=5)
+
+        ttk.Label(search_frame, text="", foreground="gray").pack(side="left", padx=5)
 
         button_frame = ttk.Frame(root)
         button_frame.pack(padx=10, pady=10)
 
-        self.start_button = ttk.Button(button_frame, text="Start Monitoring",
-                                       command=self.on_start)
+        self.start_button = ttk.Button(button_frame, text="Start Monitoring", command=self.on_start)
         self.start_button.pack(side="left", padx=5)
 
-        self.stop_button = ttk.Button(button_frame, text="Stop",
-                                      command=self.handle_stop, state="disabled")
+        self.stop_button = ttk.Button(button_frame, text="Stop", command=self.handle_stop, state="disabled")
         self.stop_button.pack(side="left", padx=5)
 
         for entry in [self.x_entry, self.y_entry, self.width_entry, self.height_entry]:
@@ -119,9 +120,7 @@ class AppUI:
                         'name': monitor.name if hasattr(monitor, 'name') else f"Monitor {i + 1}",
                         'is_primary': monitor.is_primary if hasattr(monitor, 'is_primary') else (i == 0)
                     })
-
                 monitors.sort(key=lambda m: not m.get('is_primary', False))
-
                 if monitors:
                     return monitors
             except Exception as e:
@@ -168,11 +167,9 @@ class AppUI:
             y = int(self.y_entry.get())
             width = int(self.width_entry.get())
             height = int(self.height_entry.get())
-
             self.region = (x, y, width, height)
-            self.status_label.config(text=f"Region: ({x}, {y}, {width}, {height})")
         except ValueError:
-            self.status_label.config(text="Invalid coordinates - please enter numbers")
+            pass
 
     def preview_region(self):
         try:
@@ -183,7 +180,6 @@ class AppUI:
             preview_window.attributes('-alpha', 0.6)
             preview_window.attributes('-topmost', True)
             preview_window.configure(bg='green')
-
             preview_window.geometry(f"{width}x{height}+{x}+{y}")
 
             label = tk.Label(preview_window, text="Selected Region\n(This popup will disappear in 3 seconds)",
@@ -191,9 +187,8 @@ class AppUI:
             label.pack(expand=True)
 
             preview_window.after(3000, preview_window.destroy)
-
         except Exception as e:
-            self.status_label.config(text=f"Preview error: {str(e)}")
+            print(f"Preview error: {e}")
 
     def on_start(self):
         self.update_region()
@@ -211,3 +206,6 @@ class AppUI:
 
     def get_region(self):
         return self.region
+
+    def get_search_text(self):
+        return self.search_entry.get().strip()

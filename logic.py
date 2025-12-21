@@ -78,7 +78,7 @@ def preprocess_image(img):
         return []
 
 
-def find_skip_button(img):
+def find_skip_button(img, search_text="skip"):
     if img is None or not tesseract_path:
         return None
 
@@ -88,17 +88,18 @@ def find_skip_button(img):
             return None
 
         custom_config = r'--oem 3 --psm 11'
+        search_lower = search_text.lower()
 
         for processed in processed_images:
             try:
                 text_data = pytesseract.image_to_string(processed, config=custom_config)
 
-                if "skip" in text_data.lower():
+                if search_lower in text_data.lower():
                     data = pytesseract.image_to_data(processed, output_type=pytesseract.Output.DICT,
                                                      config=custom_config)
 
                     for i, word in enumerate(data["text"]):
-                        if word and "skip" in word.lower():
+                        if word and search_lower in word.lower():
                             x = data["left"][i] + data["width"][i] // 2
                             y = data["top"][i] + data["height"][i] // 2
                             return (x, y)

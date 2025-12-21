@@ -21,8 +21,9 @@ def main_loop():
     while running:
         try:
             region = ui.get_region()
+            search_text = ui.get_search_text()
             img = logic.screenshot_region(region)
-            button = logic.find_skip_button(img)
+            button = logic.find_skip_button(img, search_text)
             if button:
                 logic.click_button(region, button)
                 time.sleep(3)
