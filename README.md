@@ -1,5 +1,5 @@
 # YoutubeAutoSkip
-Simple Python app for pressing skip button on bottom left of screen. Specifically made for youtube videos. More of a simple "vibecoding" project to be used by me for personal uses and to gain experience in ORC and other tools used. 
+Simple Python app for pressing skip button on bottom left of screen. This project is for a very specific use case that I was encountering. Long story short, I wanted to have my pc playing youtube videos while I do other things, I kept having to come back to my desktop to skip the ad, this tool solves that issue. 
 
 
 
